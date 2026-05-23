@@ -1,0 +1,35 @@
+PAQUETE 19
+EJERCICIO 1. Electrodomesticos y licuadora
+
+## 1er Paso. Importar ABC y abstractmethod para que se puedan crear clases abstractas
+from abc import ABC, abstractmethod
+
+## 2do Paso. Clase abstracta Electrodomestico, que es la base que todos los electrodomésticos deben seguir
+class Electrodomestico(ABC):
+    def __init__(self, marca):
+        self.marca = marca  # Todos los electrodomésticos tienen una marca
+
+    @abstractmethod
+    def encender(self):
+        pass
+        ## Este metodo tiene que ser implementado por cada subclase
+        ## Como no hace nada, se deja con PASS
+
+## 3er paso. Subclase, licuadora hereda de Electrodomestico
+class Licuadora(Electrodomestico):
+    def __init__(self, marca, velocidades):
+        super().__init__(marca)          ## marca (de la clase padre)
+        self.velocidades = velocidades   ## velocidades (de la clase licuadora)
+
+    ## 4to paso. Implementar el metodo abstracto encender()
+    def encender(self):
+        print(f"Licuadora {self.marca} encendida. Velocidades disponibles: {self.velocidades}")
+
+
+## Pruebas
+Mi_Licuadora = Licuadora("Oster", 5)     
+Su_Licuadora = Licuadora("Hamilton Beach", 3) 
+
+Mi_Licuadora.encender()  ## ---> Licuadora Oster encendida. Velocidades disponibles: 5
+Su_Licuadora.encender()  ## ---> Licuadora Hamilton Beach encendida. Velocidades disponibles: 3
+  
