@@ -1,5 +1,5 @@
 # PAQUETE 19
-# EJERCICIO 3. Categoria, Producto, Fisico y Digital
+# EJERCICIO 3. Categoria, Producto, Fisico y Digital.
 
 ## 1er Paso. Importar ABC y abstractmethod para que se puedan crear clases abstractas
 from abc import ABC, abstractmethod
