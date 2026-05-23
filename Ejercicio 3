@@ -1,0 +1,101 @@
+# PAQUETE 19
+# EJERCICIO 3. Categoria, Producto, Fisico y Digital
+
+## 1er Paso. Importar ABC y abstractmethod para que se puedan crear clases abstractas
+from abc import ABC, abstractmethod
+
+## 2do Paso. Clase normal Categoria solo para guardar datos
+class Categoria:
+    def __init__(self, nombre, tasa_impuesto):
+        self.nombre = nombre              ## Nombre de la categoría (ej: "Electrónica")
+        self.tasa_impuesto = tasa_impuesto  ## Porcentaje de impuesto (ej: 0.19 = 19%)
+
+## 3er Paso. Clase abstracta Producto, es la base que todos los productos deben seguir
+class Producto(ABC):
+    def __init__(self, nombre, precio_base, categoria):
+        self.nombre = nombre            ## Nombre del producto
+        self.precio_base = precio_base  ## Precio antes de impuestos y envío
+        self.categoria = categoria      ## Objeto Categoria con nombre y tasa
+
+    @abstractmethod
+    def calcular_precio_final(self):
+        pass
+        ## cada tipo de producto calcula su precio de forma diferente
+        ## aca no cumple ninguna funcion, se deja con PASS
+
+    @abstractmethod
+    def mostrar_ficha(self):
+        pass
+        ## cada tipo de producto mostrara su ficha a su manera
+        ## aca no cumple ninguna funcion, se deja con PASS
+
+## 4to Paso. Subclase ProductoFisico, hereda de Producto
+class ProductoFisico(Producto):
+    def __init__(self, nombre, precio_base, categoria, peso_kg):
+        super().__init__(nombre, precio_base, categoria)  ## Datos del padre
+        self.peso_kg = peso_kg  ## Peso propio del producto físico
+
+    ## 5to Paso. Implementar los métodos abstractos
+    def calcular_precio_final(self):
+        impuesto = self.precio_base * self.categoria.tasa_impuesto  ## Calculamos el impuesto
+        return self.precio_base + impuesto + 5000                   ## Sumamos envío de $5.000
+
+    def mostrar_ficha(self):
+        print(f"  --Producto Físico--")
+        print(f"  Nombre: {self.nombre}")
+        print(f"  Categoría: {self.categoria.nombre}")
+        print(f"  Precio base: ${self.precio_base:,.0f}")
+        print(f"  Impuesto: {self.categoria.tasa_impuesto * 100:.0f}%")
+        print(f"  Envío: $5.000")
+        print(f"  Peso: {self.peso_kg} kg")
+        print(f"  Precio final: ${self.calcular_precio_final():,.0f}")
+
+## 4to Paso. Subclase ProductoDigital, hereda de Producto
+class ProductoDigital(Producto):
+    def __init__(self, nombre, precio_base, categoria, tamanio_mb):
+        super().__init__(nombre, precio_base, categoria)  ## Datos del padre
+        self.tamanio_mb = tamanio_mb  ## Tamaño en MB del producto digital
+
+    ## 5to Paso. Implementar los métodos abstractos
+    def calcular_precio_final(self):
+        impuesto = self.precio_base * self.categoria.tasa_impuesto  ## Calculamos el impuesto
+        return self.precio_base + impuesto                          ## Sin costo de envío
+
+    def mostrar_ficha(self):
+        print(f"  --Producto Digital--")
+        print(f"  Nombre: {self.nombre}")
+        print(f"  Categoría: {self.categoria.nombre}")
+        print(f"  Precio base: ${self.precio_base:,.0f}")
+        print(f"  Impuesto: {self.categoria.tasa_impuesto * 100:.0f}%")
+        print(f"  Envío: No aplica")
+        print(f"  Tamaño: {self.tamanio_mb} MB")
+        print(f"  Precio final: ${self.calcular_precio_final():,.0f}")
+
+## Pruebass
+cat1 = Categoria("Electronica", 0.19)  ## Categoría con 19% de impuesto
+cat2 = Categoria("Software", 0.10)     ## Categoría con 10% de impuesto
+
+producto_Fisico= ProductoFisico("Teclado Mecánico", 150000, cat1, 1.2)
+producto_Digital= ProductoDigital("Antivirus Pro", 80000, cat2, 350)
+
+producto_Fisico.mostrar_ficha()
+##  --Producto Físico--
+##  Nombre: Teclado Mecánico
+##  Categoría: Electronica
+##  Precio base: $150000
+##  Impuesto: 19%
+##  Envío: $5.000
+##  Peso: 1.2 kg
+##  Precio final: $183500
+
+print()
+
+producto_Digital.mostrar_ficha()
+##  --Producto Digital--
+##  Nombre: Antivirus Pro
+##  Categoría: Software
+##  Precio base: $80000
+##  Impuesto: 10%
+##  Envío: No aplica
+##  Tamaño: 350 MB
+##  Precio final: $88000
