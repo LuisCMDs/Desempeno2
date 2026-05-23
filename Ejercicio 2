@@ -1,0 +1,63 @@
+# PAQUETE 19
+# EJERCICIO 2. CuentaBancaria, Ahorros y Corriente
+
+## 1er Paso. Importar ABC y abstractmethod para que se puedan crear clases abstractas
+from abc import ABC, abstractmethod
+
+## 2do Paso. Clase abstracta CuentaBancaria, que es la base que todos los tipos de cuenta deben seguir
+class CuentaBancaria(ABC):
+    def __init__(self, titular, saldo):
+        self.titular = titular  # Nombre del dueño de la cuenta
+        self.saldo = saldo      # Dinero disponible en la cuenta
+
+    @abstractmethod
+    def cobrar_comision(self):
+        pass
+        ## Cada tipo de cuenta maneja su comisión de forma diferente
+        ## Como no hace nada aquí, se deja con PASS
+
+    @abstractmethod
+    def mostrar_info(self):
+        pass
+        ## Cada tipo de cuenta mostrará su información a su manera
+        ## Como no hace nada aquí, se deja con PASS
+
+## 3er Paso. Subclase CuentaAhorros, hereda de CuentaBancaria
+class CuentaAhorros(CuentaBancaria):
+    def __init__(self, titular, saldo):
+        super().__init__(titular, saldo)  ## titular y saldo (de la clase padre)
+
+    ## 4to Paso. Implementar los métodos abstractos
+    def cobrar_comision(self):
+        rendimiento = self.saldo * 0.02   ## Calculamos el 2% del saldo actual
+        self.saldo += rendimiento         ## Sumamos el rendimiento al saldo
+        print(f"Rendimiento del 2% aplicado: +${rendimiento:,.0f}")
+
+    def mostrar_info(self):
+        print(f"[Ahorros] Titular: {self.titular} | Saldo: ${self.saldo:,.0f}")
+
+## 3er Paso. Subclase CuentaCorriente, hereda de CuentaBancaria
+class CuentaCorriente(CuentaBancaria):
+    def __init__(self, titular, saldo):
+        super().__init__(titular, saldo)  ## titular y saldo (de la clase padre)
+
+    ## 4to Paso. Implementar los métodos abstractos
+    def cobrar_comision(self):
+        self.saldo -= 8000  ## Para descontar la comisión fija del saldo
+        print(f"Comisión fija de $8.000 cobrada.")
+
+    def mostrar_info(self):
+        print(f"[Corriente] Titular: {self.titular} | Saldo: ${self.saldo:,.0f}")
+
+
+## Pruebas
+Mi_Ahorros   = CuentaAhorros("Laura Gómez", 500000)   
+Mi_Corriente = CuentaCorriente("Carlos Ruiz", 200000)  
+
+Mi_Ahorros.mostrar_info()     ## ---> [Ahorros] Titular: Laura Gómez | Saldo: $500,000
+Mi_Ahorros.cobrar_comision()  ## ---> Rendimiento del 2% aplicado: +$10,000
+Mi_Ahorros.mostrar_info()     ## ---> [Ahorros] Titular: Laura Gómez | Saldo: $510,000
+
+Mi_Corriente.mostrar_info()     ## ---> [Corriente] Titular: Carlos Ruiz | Saldo: $200,000
+Mi_Corriente.cobrar_comision()  ## ---> Comisión fija de $8.000 cobrada.
+Mi_Corriente.mostrar_info()     ## ---> [Corriente] Titular: Carlos Ruiz | Saldo: $192,000
